@@ -51,3 +51,6 @@ npm run test:unit
 npm run lint
 ```
 ![todos](https://user-images.githubusercontent.com/87428073/214097600-a8ccda80-97b3-419d-a126-8221c1ac1a42.png)
+
+![Todoss](https://user-images.githubusercontent.com/87428073/214099270-985dc9c7-e44c-4bea-bf37-3c25f617a0fb.png)
+
