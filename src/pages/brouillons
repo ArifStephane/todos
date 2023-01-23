@@ -1,0 +1,577 @@
+
+
+<input type="checkbox" id="Catégorie" name="fait" />
+
+<div class="flex justify-center flex-col">
+    <div class=""><input type="checkbox" id="Catégorie" name="fait" /></div>
+    <div class="flex-col ml-2" v-for="todo in liste" :key="todo">
+        {{ todo }}
+    </div>
+    <div>
+        <DeleteIcon />
+    </div>
+</div>
+
+<template>
+    <div class="flex flex-col justify-center items-center">
+        <div class="flex justify-center mb-10">
+            <input v-model="todos" class="w-1/3 h-12 border border-solid rounded-3xl pl-3" placeholder="Add todo..." />
+            <button class="-ml-12 pt-1" @click="ajouterListe">
+                <AjoutIcon />
+            </button>
+        </div>
+        <!-- <div class="flex justify-center flex-col"> -->
+        <!-- <div class=""><input type="checkbox" id="Catégorie" name="fait" /></div> -->
+        <div class="flex-col" v-for="todo in liste" :key="todo">
+            {{ todo }}
+        </div>
+        <div>
+            <DeleteIcon />
+        </div>
+        <!-- </div> -->
+    </div>
+</template>
+
+<div class="bg-black" v-for="todo in finish" :key="todo">
+  <finishTaches :todo="todo" @deleteElement="supprimerDeList" />
+</div>
+
+v-for="todo in finish" :key="todo"
+
+<div class="flex justify-between space-y-5 items-center flex-col">
+  <div class="" v-for="todo in finish" :key="todo">
+    <finishTaches :todo="todo" />
+  </div>
+</div>
+
+
+
+
+function endTaches(todo) {
+console.log("voila", todo);
+const index = liste.value.indexOf(todo);
+console.log("hsxhxshgh", index);
+if (index >= 0) liste.value.splice(index, 1);
+finish.value.push(todo);
+}
+
+function endTache(todo) {
+console.log("voila", todo);
+const index = liste.value.indexOf(todo);
+console.log("hsxhxshgh", index);
+if (index >= 0) liste.value.splice(index, 1);
+finish.value.push(todo);
+}
+
+v-for="todo in finish" :key="todo"
+:todo="todo" @deleteElement="supprimerDeList"
+
+<div class="flex justify-between space-y-5 items-center" v-for="todo in finish" :key="todo">
+  <finishTaches :todo="todo" @deletElement="ajouterAFinish" />
+</div>
+
+const finish = ref([]);
+
+function ajouterAFinish(todo) {
+finish.value.push(todo);
+console.log(finish);
+}
+
+<template>
+  <div class="flex justify-center mb-10">
+    <input v-model="todo.label" class="w-2/4 h-12 border border-solid rounded-3xl pl-3" placeholder="Add todo..." />
+    <button class="-ml-12 pt-1" @click="emitAddElementEvent">
+      <AjoutIcon />
+    </button>
+  </div>
+</template>
+<script setup>
+  import {ref, defineEmits} from "vue";
+  import AjoutIcon from "@/components/icons/AjoutIcon.vue";
+
+  const emits = defineEmits(["addElement"]);
+
+  const todo = ref({state: "progress", label: ""});
+
+  function emitAddElementEvent() {
+    emits("addElement", todo.value);
+    todo.value = ;
+  }
+</script>
+
+<template>
+  <div class="bg-white h-screen">
+    <div class="text-gray-300 lowercase text-8xl text-center pt-40 mb-16 font-semibold leading-4 tracking-wide">
+      todos
+    </div>
+    <VInput @addElement="addToDo" />
+    <div class="flex justify-center flex-col max-w-lg mx-auto">
+      <div class="">
+        <span class="font-bold">En cours</span>
+        <div v-for="todo in inProgressToDo" :key="todo">
+          <VTaches :todo="todo" @clickElement="addToFinish" @deleteElement="deleteToDo" />
+        </div>
+      </div>
+      <div>
+        <span class="font-bold">Terminer</span>
+
+        <div v-for="todo in finishToDo" :key="todo">
+          <VTaches :todo="todo" @deleteElement="addToFinish" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script setup>
+  import {ref, computed} from "vue";
+  import VInput from "@/components/VInput.vue";
+  import VTaches from "@/components/VTaches.vue";
+
+  const allToDo = ref([]);
+  const inProgressToDo = computed(() => {
+    return allToDo.value.filter((el) => {
+      return el.state == "progress";
+    });
+  });
+  const finishToDo = computed(() => {
+    return allToDo.value.filter((el) => {
+      return el.state == "finish";
+    });
+  });
+
+  function addToDo(todo) {
+    if (todo.label == "") {
+      alert("Please write item");
+      return;
+    }
+
+    allToDo.value.push(todo);
+    console.log(allToDo);
+  }
+
+  function deleteToDo(todo) {
+    console.log("voila", todo);
+    const index = allToDo.value.indexOf(todo);
+    console.log("hsxhxshgh", index);
+    if (index >= 0) allToDo.value.splice(index, 1);
+  }
+
+  function addToFinish(todo) {
+    // finishToDo.value.push(todo);
+    console.log(todo);
+    // deleteToDo(todo);
+    todo.state = "finish";
+    console.log(todo);
+  }
+</script>
+<style lang="scss" scoped></style>
+
+<template>
+  <div class="flex justify-between space-y-5 items-center mb-10">
+    <div>
+      <input type="checkbox" id="Catégorie" name="fait" class="mr-3" :todo="todo" @click="emitclickElementEvent" />
+      <span>
+        {{ todo.label }}
+      </span>
+    </div>
+    <button class="ml-72 bg-slate-300 p-4 rounded-full">
+      <DeleteIcon @click="emitdeleteElementEvent" />
+    </button>
+  </div>
+</template>
+<script setup>
+  import {ref, defineEmits, defineProps} from "vue";
+  import DeleteIcon from "@/components/icons/DeleteIcon.vue";
+
+  const props = defineProps(["todo"]);
+  const emits = defineEmits(["deleteElement", "clickElement"]);
+  function emitdeleteElementEvent() {
+    emits("deleteElement", props.todo);
+  }
+
+  function emitclickElementEvent() {
+    emits("clickElement", props.todo);
+  }
+</script>
+
+      <div>
+        <span class="font-bold">Terminer</span>
+      
+        <div v-for="todo in finishToDo" :key="todo">
+          <VTaches :todo="todo" @deleteElement="addToFinish" />
+        </div>
+      </div>
+          
+  <!-- <div> -->
+  <!-- <span class="font-bold">Terminer</span> -->
+  
+  <!-- <div v-for="todo in finishToDo" :key="todo"> -->
+  <!-- <VTaches :todo="todo" @deleteElement="addToFinish" /> -->
+  <!-- </div> -->
+  <!-- </div> -->
+
+
+  const inProgressToDo = computed(() => {
+  return allToDo.value.filter((el) => {
+  return el.state == "progress";
+  });
+  });
+  const finishToDo = computed(() => {
+  return allToDo.value.filter((el) => {
+  return el.state == "finish";
+  });
+  });
+ 
+  const finishToDo = ref([]);
+  function addToFinish(todo) {
+  finishToDo.value.push(todo);
+  console.log(todo);
+  deleteToDo(todo);
+  // todo.state = "finish";
+  // console.log(todo);
+  }
+
+  :checked="true"
+
+  @Validated="validatedTodo"
+const validated = true;
+  function validatedTodo(todo) {
+  finishToDo.value = validated;
+  }
+        :validated="false"
+
+        function emittoValidated() {
+        emits("toValidated", props.validated);
+        }
+
+
+        v-if="validated ==true"
+
+        v-if=":validated == true;"
+         hidden
+
+         v-if="condition"
+
+        v-if="(validated == true, hidden)
+
+
+
+
+
+
+
+
+        <input v-model="todo" class="w-2/4 h-12 border border-solid rounded-3xl pl-3 shadow-lg" placeholder="Add todo..."
+          @keyup.enter="emitAddElementEvent" />
+        
+        <div class="-bottom-6 right-5 rounded-full aspect-square p-6 bg-blue-500 text-white leading-4">
+          <input v-model="todo" class="w-2/4 h-12 border border-solid rounded-3xl pl-3 shadow-lg" placeholder="Add todo..."
+            @keyup.enter="emitAddElementEvent" />
+        </div>
+        
+        <template>
+          <div class="fixed flex-col inset-0 bg-white items-center flex justify-center">
+            <div class="shadow-md flex-col flex rounded overflow-hidden w-80 h-96">
+              <Vadd />
+            </div>
+          </div>
+        </template>
+        <script setup>
+          import Vadd from "@/components/VAdd.vue";
+        </script>
+        <style scoped></style>
+        
+        <template>
+          <div class="relative bg-violet-200">
+            <div class="text-white px-6 py-10 gap-2">
+              <span class="font-bold text-6xl">0</span>
+              <div>
+                <div class="font-semibold">Tasks</div>
+                <div>/2</div>
+              </div>
+            </div>
+        
+            <div class="-bottom-6 right-5 rounded-full aspect-square p-6 bg-blue-500 text-white leading-4">
+              <input v-model="todo" class="w-2/4 h-12 border border-solid rounded-3xl pl-3 shadow-lg"
+                placeholder="Add todo..." />
+            </div>
+          </div>
+        </template>
+        
+        <script setup></script>
+        <style scoped></style>
+        
+        <div class="flex px-4 items-stretch border-b gap-4 h-10">
+          <div class="py-1 aspect-square">Tout</div>
+          <div class="aspect-square py-1">Faits</div>
+          <div class="py-1 aspect-square">Non Faits</div>
+        </div>
+        v-if="!bon"
+        :Bon="true"
+        
+        
+        <div class="py-1 aspect-square" @click="etat = 'tout'">
+          Tout
+          <div class="flex-1 overflow-scroll" v-if="etat == 'tout'">
+            <VTasks :todo="todo" v-for="(todo, index) in allToDo" :key="index" @clickElement="addToFinish" />
+          </div>
+        </div>
+        </div>
+        <div>
+          <div class="aspect-square py-1" @click="etat = 'fait'">
+            Faits
+            <div class="flex-1 overflow-scroll" v-if="etat == 'fait'">
+              <VTasks :todo="todo" v-for="(todo, index) in finishToDo" :key="index" />
+            </div>
+          </div>
+        </div>
+        <div class="py-1 aspect-square">Non Faits</div>
+        </div>
+        </div>
+        
+        
+        @keyup.enter="emitAddElementEvent"
+        
+        
+        
+        <!-- VAdd.vue -->
+        <template>
+          <div class="flex p-4 items-stretch border-b" v-if="isClick">
+            <form @submit.prevent="emitAddElementEvent" action="./ff" method="get" class="flex gap-4">
+              <input v-model="todo.label" type="text" name="in" class="border-blue-400 border rounded" />
+              <button class="px-2 py-1 rounded text-white bg-blue-500" type="submit">
+                Add
+              </button>
+            </form>
+          </div>
+        </template>
+        <script setup>
+          import {ref, defineProps, defineEmits} from "vue";
+          defineProps(["isClick"]);
+          const todo = ref({state: "progress", label: ""});
+          defineEmits(["addElement"]);
+
+          function emitAddElementEvent() {
+            emits("addElement", todo.value);
+            todo.value = {state: "progress", label: ""};
+          }
+        </script>
+        
+        <!-- Vtasks -->
+        <template>
+          <div class="flex justify-between items-center p-4">
+            <div class="flex items-center gap-2">
+              <input type="checkbox" name="fait" id="0" :todo="todo" @click="emitclickElementEvent" />
+              <span :class="{ 'line-through italic': todo.state == 'finish' }">{{
+                todo.label
+                }}</span>
+            </div>
+          </div>
+        </template>
+        <script setup>
+          import {defineProps, defineEmits} from "vue";
+
+          const props = defineProps(["todo", "validated"]);
+          const emits = defineEmits(["clickElement"]);
+          function emitclickElementEvent() {
+            emits("clickElement", props.todo);
+          }
+        </script>
+        
+        <!-- IndexPage -->
+        <template>
+          <div class="bg-white items-center flex justify-center fixed flex-col">
+            <div class="shadow-md flex-col flex rounded overflow-hidden w-80 h-96">
+              <div class="relative bg-violet-200">
+                <div class="flex text-white px-6 py-10 gap-2">
+                  <span class="font-bold text-6xl">{{ numberTaskDo }}</span>
+                  <div>
+                    <div class="font-semibold">Tasks</div>
+                    <div>/{{ numberTask }}</div>
+                  </div>
+                </div>
+                <button class="-bottom-6 right-5 rounded-full absolute p-6 bg-blue-500 text-white leading-4" @click="click"
+                  v-if="!isClick"></button>
+              </div>
+              <div class="mt-4">
+                <VAdd :isClick="isClick" @addElement="addToDo" />
+              </div>
+        
+              <div class="flex justify-between px-4">
+                <span class="px-4" @click="etat = 'tout'">Tout</span>
+                <span @click="etat = 'fait'">Fait</span>
+                <span class="px-4" @click="etat = 'nofait'">No Fait</span>
+              </div>
+              <div class="overflow-scroll">
+                <div class="flex flex-col justify-center" v-if="etat == 'tout'">
+                  <VTasks :todo="todo" v-for="(todo, index) in allToDo" :key="index" @clickElement="addToFinish" />
+                </div>
+                <div class="flex flex-col justify-center" v-if="etat == 'fait'">
+                  <VTasks :todo="todo" v-for="(todo, index) in finishToDo" :key="index" />
+                  <div class="flex flex-col justify-center" v-if="etat == 'nonfait'">
+                    <VTasks :todo="todo" v-for="(todo, index) in notToDo" :key="index" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+        <script setup>
+          import {ref} from "vue";
+          import VAdd from "@/components/VAdd.vue";
+          import VTasks from "@/components/VTasks.vue";
+          let isClick = ref(false);
+          const finishToDo = ref([]);
+          const etat = ref("tout");
+          function click() {
+            isClick.value = true;
+          }
+          const allToDo = ref([]);
+          const numberTask = ref();
+          const numberTaskDo = ref();
+          function addToDo(todo) {
+            allToDo.value.push(todo);
+            console.log("allToDo", allToDo);
+            numberTask.value = allToDo.value.length;
+          }
+
+          function addToFinish(todo) {
+            finishToDo.value.push(todo);
+            console.log(todo);
+            todo.state = "finish";
+            numberTaskDo.value = finishToDo.value.length;
+          }
+        </script>
+        <style scoped></style>
+        
+        @clickElement="addNotToDo"
+        
+        
+        
+        <!-- index -->
+        <template>
+          <div class="bg-white items-center flex justify-center h-2/3 mt-20 flex-col">
+            <div class="shadow-md flex-col flex rounded overflow-hidden w-80 h-96">
+              <div class="relative bg-violet-200">
+                <div class="flex text-white px-6 py-10 gap-2">
+                  <span class="font-bold text-6xl">{{ numberTaskDo }}</span>
+                  <div>
+                    <div class="font-semibold">Tasks</div>
+                    <div>/{{ numberTask }}</div>
+                  </div>
+                </div>
+                <button class="-bottom-6 right-5 rounded-full absolute p-6 bg-blue-500 text-white mb-4 leading-4" @click="click"
+                  v-if="!isClick"></button>
+              </div>
+              <div class="mt-4">
+                <VAdd :isClick="isClick" @addElement="addToDo" />
+              </div>
+        
+              <div class="flex justify-between px-4">
+                <span class="px-4" @click="etat = 'tout'">Tout</span>
+                <span @click="etat = 'fait'">Fait</span>
+                <span class="px-4" @click="etat = 'nonfait'">No Fait</span>
+              </div>
+              <div class="overflow-scroll">
+                <div class="flex flex-col justify-center" v-if="etat == 'tout'">
+                  <VTasks :todo="todo" v-for="(todo, index) in allToDo" :key="index" @clickElement="toggleTodo" />
+                </div>
+                <div class="flex flex-col justify-centere" v-if="etat == 'fait'">
+                  <VTasks :todo="todo" v-for="(todo, index) in finishToDo" :key="index" />
+                </div>
+                <div class="flex flex-col justify-center" v-if="etat == 'nonfait'">
+                  <VTasks :todo="todo" v-for="(todo, index) in notToDo" :key="index" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+        <script setup>
+          import {ref} from "vue";
+          import VAdd from "@/components/VAdd.vue";
+          import VTasks from "@/components/VTasks.vue";
+          let isClick = ref(false);
+          const finishToDo = ref([]);
+          const etat = ref("tout");
+          const allToDo = ref([]);
+          const numberTask = ref();
+          const numberTaskDo = ref();
+          const notToDo = ref([]);
+
+          function click() {
+            isClick.value = true;
+          }
+
+          function addToDo(todo) {
+            if (todo.label == "") {
+              alert("Please write item");
+              return;
+            }
+            allToDo.value.push(todo);
+            notToDo.value.push(todo);
+            console.log("allToDo", allToDo);
+            numberTask.value = allToDo.value.length;
+          }
+
+          function toggleTodo(todo) {
+            // finishToDo.value.push(todo);
+            // console.log(todo);
+            // todo.state = "finish";
+            // numberTaskDo.value = finishToDo.value.length;
+            if (todo.state == "progress") {
+              todo.state = "finish";
+              finishToDo.value.push(todo);
+              numberTaskDo.value = finishToDo.value.length;
+            } else {
+              todo.state == "progress";
+              notToDo.value.push(todo);
+            }
+          }
+        </script>
+        
+        <style scoped></style>
+        
+        <!-- task -->
+        <template>
+          <div class="flex justify-between items-center p-4">
+            <div class="flex items-center gap-2">
+              <input type="checkbox" name="fait" id="0" :todo="todo" @click="emitclickElementEvent" />
+              <span :class="{ 'line-through italic': todo.state == 'finish' }">{{
+                todo.label
+                }}</span>
+            </div>
+          </div>
+        </template>
+        <script setup>
+          import {defineProps, defineEmits} from "vue";
+
+          const props = defineProps(["todo", "validated"]);
+          const emits = defineEmits(["clickElement"]);
+          function emitclickElementEvent() {
+            emits("clickElement", props.todo);
+          }
+        </script>
+        
+        <!-- add -->
+        <template>
+          <div class="flex p-4 items-stretch border-b" v-if="isClick">
+            <form class="flex gap-4" @submit.prevent="emitAddElementEvent">
+              <input v-model="todo.label" type="text" name="in" class="border-blue-400 border rounded"
+                @keyup.enter="emitAddElementEvent" />
+              <button class="px-2 py-1 rounded text-white bg-blue-500" type="button" @click="emitAddElementEvent">
+                Add
+              </button>
+            </form>
+          </div>
+        </template>
+        <script setup>
+          import {ref, defineProps} from "vue";
+          defineProps(["isClick"]);
+          const todo = ref({state: "progress", label: ""});
+          const emits = defineEmits(["addElement"]);
+
+          function emitAddElementEvent() {
+            emits("addElement", todo.value);
+            todo.value = {state: "progress", label: ""};
+          }
+        </script>
