@@ -50,3 +50,4 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+![todos](https://user-images.githubusercontent.com/87428073/214097600-a8ccda80-97b3-419d-a126-8221c1ac1a42.png)
